@@ -3,13 +3,23 @@ const { getStorage } = require("firebase-admin/storage");
 const fs = require("fs");
 const path = require("path");
 
-// Load service account key
-const serviceAccountPath = path.join(__dirname, "serviceAccountKey.json");
-if (!fs.existsSync(serviceAccountPath)) {
-  console.warn("Warning: serviceAccountKey.json not found. Skipping calendar download. Using cached files.");
-  process.exit(0);
+let serviceAccount;
+if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+  try {
+    serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+  } catch (err) {
+    console.error("Error parsing FIREBASE_SERVICE_ACCOUNT env variable:", err.message);
+    process.exit(1);
+  }
+} else {
+  // Load service account key from file
+  const serviceAccountPath = path.join(__dirname, "serviceAccountKey.json");
+  if (!fs.existsSync(serviceAccountPath)) {
+    console.warn("Warning: serviceAccountKey.json not found and FIREBASE_SERVICE_ACCOUNT not set. Skipping calendar download. Using cached files.");
+    process.exit(0);
+  }
+  serviceAccount = require(serviceAccountPath);
 }
-const serviceAccount = require(serviceAccountPath);
 
 // Initialize Firebase
 initializeApp({

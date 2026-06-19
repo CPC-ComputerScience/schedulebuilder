@@ -32,6 +32,8 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
