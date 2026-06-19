@@ -1,0 +1,216 @@
+.print-calendar-step {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.print-controls {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.controls-left h2 {
+  margin-bottom: 4px;
+  color: var(--color-text);
+}
+
+.controls-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.month-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 4px 8px;
+}
+
+.current-month {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-text);
+  min-width: 150px;
+  text-align: center;
+}
+
+.no-data-notice {
+  padding: 0;
+  overflow: hidden;
+}
+
+/* Screen preview styling */
+.print-preview-wrapper {
+  background: var(--color-bg);
+  padding: 24px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.print-page-portrait {
+  background: white !important;
+  color: black !important;
+  width: 100%;
+  max-width: 790px;
+  /* aspect-ratio to match US Letter */
+  min-height: 1020px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.print-page-portrait .print-table {
+  width: 100%;
+  height: 100%;
+  flex-grow: 1;
+  border-collapse: collapse;
+}
+
+.print-page-portrait .print-table th,
+.print-page-portrait .print-table td {
+  border: 3px double #000;
+  padding: 8px;
+  text-align: center;
+  vertical-align: middle;
+  background: white !important;
+  color: black !important;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 11px;
+}
+
+.print-page-portrait .print-table th {
+  font-weight: 800;
+  font-size: 13px;
+  text-transform: none;
+  background: #f0f0f0 !important;
+}
+
+.print-label-col {
+  width: 15%;
+}
+
+.print-label-cell {
+  font-weight: 800;
+  font-size: 11px;
+  text-align: center !important;
+  background: #fafafa !important;
+}
+
+.print-label-cell strong {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+
+.period-time {
+  font-size: 9px;
+  font-weight: 500;
+  color: #555;
+}
+
+.lunch-time {
+  font-size: 8px;
+  font-weight: 600;
+  color: #777;
+  margin-top: 1px;
+}
+
+.print-cell-empty {
+  background: white !important;
+}
+
+.print-notes-cell {
+  background: white !important;
+  vertical-align: top !important;
+  padding-top: 6px !important;
+}
+
+.print-page-portrait .print-table td.print-cell-standard {
+  vertical-align: top !important;
+  padding-top: 8px !important;
+}
+
+.print-cell-duty {
+  background: #fff9db !important;
+  font-weight: 800;
+}
+
+.print-cell-lunch {
+  background: #e8f4fd !important;
+  font-weight: 700;
+  color: #333 !important;
+}
+
+.print-holiday-cell-text {
+  font-weight: 800;
+  font-size: 13px;
+  background: white !important;
+  color: black !important;
+}
+
+.print-todo-col-header {
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.print-todo-cell {
+  background: white !important;
+}
+
+/* Set row heights for visual balance in screen preview */
+.row-notes-top {
+  height: 60px;
+}
+
+.row-homeroom {
+  height: 40px;
+}
+
+.row-notes-bottom {
+  height: 120px;
+}
+
+.print-page-portrait .print-table tbody tr:not(.row-notes-top):not(.row-homeroom):not(.row-notes-bottom) {
+  height: 110px;
+}
+
+.print-cell-day-off {
+  background: #d8d8d8 !important;
+}
+
+/* Event text on greyed-out day-off cells still readable */
+.print-cell-day-off .print-event-text {
+  color: #555 !important;
+  font-style: italic;
+}
+
+
+.print-cell-main-content {
+  font-weight: 700;
+  font-size: 11px;
+  text-align: center;
+}
+
+.print-event-text {
+  font-weight: 700;
+  font-size: 10px;
+  color: #111;
+  text-align: center;
+  padding: 2px 4px;
+  word-break: break-word;
+  white-space: normal;
+}

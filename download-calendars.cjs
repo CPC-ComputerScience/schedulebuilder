@@ -1,0 +1,45 @@
+const { initializeApp, cert } = require("firebase-admin/app");
+const { getStorage } = require("firebase-admin/storage");
+const fs = require("fs");
+const path = require("path");
+
+// Load service account key
+const serviceAccountPath = path.join(__dirname, "serviceAccountKey.json");
+if (!fs.existsSync(serviceAccountPath)) {
+  console.error("Error: serviceAccountKey.json not found in project root.");
+  process.exit(1);
+}
+const serviceAccount = require(serviceAccountPath);
+
+// Initialize Firebase
+initializeApp({
+  credential: cert(serviceAccount),
+  storageBucket: "cpc-schedule-builder.firebasestorage.app"
+});
+
+const publicDir = path.join(__dirname, "public");
+if (!fs.existsSync(publicDir)) {
+  fs.mkdirSync(publicDir, { recursive: true });
+}
+
+async function downloadFile(bucketFile, localName) {
+  const destPath = path.join(publicDir, localName);
+  console.log(`Downloading gs://cpc-schedule-builder.firebasestorage.app/${bucketFile} to ${destPath}...`);
+  try {
+    const bucket = getStorage().bucket();
+    const file = bucket.file(bucketFile);
+    await file.download({ destination: destPath });
+    console.log(`Successfully downloaded ${localName}`);
+  } catch (error) {
+    console.error(`Error downloading ${bucketFile}:`, error);
+    process.exit(1);
+  }
+}
+
+async function main() {
+  await downloadFile("cpc days.ics", "cpc-days.ics");
+  await downloadFile("cpc teacher days.ics", "cpc-teacher-days.ics");
+  console.log("All calendars downloaded successfully!");
+}
+
+main();

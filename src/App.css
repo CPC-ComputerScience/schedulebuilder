@@ -1,0 +1,99 @@
+.app-root { min-height: 100vh; display: flex; flex-direction: column; }
+
+/* ─── Header ──────────────────────────────────────────────── */
+.app-header {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.brand-icon {
+  font-size: 1.6rem;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary-dim);
+  border: 1px solid rgba(91,127,255,0.3);
+  border-radius: var(--radius-md);
+}
+.brand-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #5b7fff, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+}
+.brand-sub {
+  font-size: 0.72rem;
+  color: var(--color-text-faint);
+  font-weight: 500;
+  display: block;
+}
+
+.header-actions { display: flex; align-items: center; gap: 12px; }
+.teacher-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+/* ─── Main ────────────────────────────────────────────────── */
+.main-content { flex: 1; padding-bottom: 40px; }
+.step-content { margin-bottom: 24px; }
+
+/* ─── Wizard Nav ──────────────────────────────────────────── */
+.wizard-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0 8px;
+  border-top: 1px solid var(--color-border);
+  margin-top: 8px;
+}
+.step-counter {
+  font-size: 0.8rem;
+  color: var(--color-text-faint);
+  font-weight: 600;
+}
+.btn[disabled] {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ─── Footer ──────────────────────────────────────────────── */
+.app-footer {
+  border-top: 1px solid var(--color-border);
+  padding: 16px 0;
+  text-align: center;
+}
+.app-footer p {
+  font-size: 0.75rem;
+  color: var(--color-text-faint);
+}
