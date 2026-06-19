@@ -6,8 +6,8 @@ const path = require("path");
 // Load service account key
 const serviceAccountPath = path.join(__dirname, "serviceAccountKey.json");
 if (!fs.existsSync(serviceAccountPath)) {
-  console.error("Error: serviceAccountKey.json not found in project root.");
-  process.exit(1);
+  console.warn("Warning: serviceAccountKey.json not found. Skipping calendar download. Using cached files.");
+  process.exit(0);
 }
 const serviceAccount = require(serviceAccountPath);
 
