@@ -19,11 +19,11 @@ function AppInner() {
     if (icalData.rotationDays.length === 0 && icalData.holidays.length === 0 || (icalData.notes || []).length === 0) {
       setLoadingCalendars(true);
       Promise.all([
-        fetch('/cpc-days.ics').then(res => {
-          if (!res.ok) throw new Error('Could not download cpc days.ics');
+        fetch(`${import.meta.env.BASE_URL}cpc-days.ics`).then(res => {
+          if (!res.ok) throw new Error("Failed to fetch cpc-days");
           return res.text();
         }),
-        fetch('/cpc-teacher-days.ics').then(res => {
+        fetch(`${import.meta.env.BASE_URL}cpc-teacher-days.ics`).then(res => {
           if (!res.ok) throw new Error('Could not download cpc teacher days.ics');
           return res.text();
         })
