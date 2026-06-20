@@ -35,9 +35,6 @@ const DEFAULT_BLOCKS: Block[] = [
 ];
 
 const now = new Date();
-// Academic year runs Aug–Jun. In Jul+ of year Y → academic year Y–(Y+1).
-// In Jan–Jun of year Y → academic year (Y-1)–Y.
-const academicStartYear = now.getMonth() >= 6 ? now.getFullYear() : now.getFullYear() - 1;
 
 const INITIAL_STATE: AppState = {
   teacherName: '',
