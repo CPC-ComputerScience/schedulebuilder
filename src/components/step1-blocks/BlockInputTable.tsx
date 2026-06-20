@@ -46,6 +46,7 @@ export default function BlockInputTable() {
               onChange={e => setTeacherName(e.target.value)}
               onBlur={handleTeacherBlur}
             />
+          </div>
         </div>
       </div>
 
