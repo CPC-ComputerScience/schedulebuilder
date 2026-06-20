@@ -6,10 +6,8 @@ import './BlockInputTable.css';
 export default function BlockInputTable() {
   const { state, dispatch } = useSchedule();
   const [teacherName, setTeacherName] = useState(state.teacherName);
-  const [schoolName, setSchoolName] = useState(state.schoolName);
 
   const handleTeacherBlur = () => dispatch({ type: 'SET_TEACHER_NAME', payload: teacherName });
-  const handleSchoolBlur = () => dispatch({ type: 'SET_SCHOOL_NAME', payload: schoolName });
 
   const handleBlockChange = (
     id: BlockId,
@@ -48,18 +46,6 @@ export default function BlockInputTable() {
               onChange={e => setTeacherName(e.target.value)}
               onBlur={handleTeacherBlur}
             />
-          </div>
-          <div className="field-group">
-            <label className="field-label">School Name</label>
-            <input
-              className="input"
-              type="text"
-              placeholder="e.g. Westview Secondary School"
-              value={schoolName}
-              onChange={e => setSchoolName(e.target.value)}
-              onBlur={handleSchoolBlur}
-            />
-          </div>
         </div>
       </div>
 
