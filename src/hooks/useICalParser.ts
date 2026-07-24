@@ -23,6 +23,7 @@ interface RawEvent {
   summary: string;
   dtstart: string;
   dtend?: string;
+  rrule?: string;
 }
 
 function extractEvents(icsText: string): RawEvent[] {
@@ -51,7 +52,8 @@ function extractEvents(icsText: string): RawEvent[] {
         events.push({ 
           summary: current.summary, 
           dtstart: current.dtstart, 
-          dtend: current.dtend 
+          dtend: current.dtend,
+          rrule: current.rrule
         });
       }
       inEvent = false;
@@ -62,6 +64,8 @@ function extractEvents(icsText: string): RawEvent[] {
         current.dtstart = line.trim();
       } else if (line.startsWith('DTEND')) {
         current.dtend = line.trim();
+      } else if (line.startsWith('RRULE:')) {
+        current.rrule = line.slice('RRULE:'.length).trim();
       }
     }
   }
@@ -100,6 +104,45 @@ function expandEventDates(event: RawEvent): string[] {
     current.setDate(current.getDate() + 1);
   }
   
+  if (event.rrule) {
+    const isDaily = event.rrule.includes('FREQ=DAILY');
+    
+    // Support simple DAILY recurrences (like Staff Meetings)
+    if (isDaily) {
+      const countMatch = event.rrule.match(/COUNT=(\d+)/);
+      const untilMatch = event.rrule.match(/UNTIL=(\d{8})/);
+      
+      const count = countMatch ? parseInt(countMatch[1], 10) : null;
+      let untilDate: Date | null = null;
+      
+      if (untilMatch) {
+        const uStr = untilMatch[1];
+        untilDate = new Date(
+          parseInt(uStr.slice(0, 4), 10),
+          parseInt(uStr.slice(4, 6), 10) - 1,
+          parseInt(uStr.slice(6, 8), 10)
+        );
+      }
+      
+      const nextDate = new Date(start);
+      nextDate.setDate(nextDate.getDate() + 1); // Start from day 2
+      
+      let generated = 1; // base occurrence is 1
+      
+      while (true) {
+        if (count !== null && generated >= count) break;
+        if (untilDate !== null && nextDate > untilDate) break;
+        if (generated > 365) break; // Failsafe
+        
+        const nextStr = `${nextDate.getFullYear()}-${String(nextDate.getMonth() + 1).padStart(2, '0')}-${String(nextDate.getDate()).padStart(2, '0')}`;
+        if (!dates.includes(nextStr)) dates.push(nextStr);
+        
+        nextDate.setDate(nextDate.getDate() + 1);
+        generated++;
+      }
+    }
+  }
+
   return dates;
 }
 
