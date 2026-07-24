@@ -52,14 +52,14 @@ function isUpperGrade(grade: string): boolean {
 type BlockMapping = [DayNum, Period][];
 
 const BLOCK_DEFAULT_SLOTS: Record<string, BlockMapping> = {
-  A: [[1, 'P1'], [3, 'P3-Late']],   // appears Day1-P1 and Day3-P3-Late (7ENG-01)
-  B: [[1, 'P2'], [3, 'P4']],        // appears Day1-P2 and Day3-P4 (7ENG-02)
-  C: [[2, 'P3-Early']],             // prep — Day2-P3
-  D: [[1, 'P4'], [2, 'P1']],        // ENL1W-03 Day1-P4, Day2-P1? No...
-  E: [[2, 'P1'], [3, 'P2']],        // ENL1W-04 Day2-P1, Day3-P2? No...
-  F: [[4, 'P3-Early']],             // prep — Day4-P3
-  G: [[2, 'P3-Early'], [4, 'P1']],  // HSP3U-05 Day2-P3, Day4-P1
-  H: [[2, 'P4'], [4, 'P2']],        // HSP3U-06 Day2-P4, Day4-P2
+  A: [[1, 'P1'], [3, 'P3-Early']],
+  B: [[1, 'P2'], [3, 'P4']],
+  C: [[1, 'P3-Early'], [3, 'P1']],
+  D: [[1, 'P4'], [3, 'P2']],
+  E: [[2, 'P1'], [4, 'P3-Early']],
+  F: [[2, 'P2'], [4, 'P4']],
+  G: [[2, 'P3-Early'], [4, 'P1']],
+  H: [[2, 'P4'], [4, 'P2']],
 };
 
 export function deriveGridFromBlocks(blocks: Block[]): ScheduleGrid {
