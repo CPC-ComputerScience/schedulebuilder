@@ -235,11 +235,14 @@ function PrintPageMTW({ week }: PageProps) {
         <thead>
           <tr>
             <th className="print-label-col" style={{ width: '15%' }}></th>
-            {days.map((day, idx) => (
-              <th key={idx} style={{ width: '28.33%' }}>
-                {formatDayHeader(day)}
-              </th>
-            ))}
+            {days.map((day, idx) => {
+              const noSchool = day.dayNum === null || isNoSchoolEvent(day.holidayName) || hasNoSchoolNote(day.notes);
+              return (
+                <th key={idx} className={noSchool ? 'print-cell-day-off' : ''} style={{ width: '28.33%' }}>
+                  {formatDayHeader(day)}
+                </th>
+              );
+            })}
           </tr>
         </thead>
         <tbody>
@@ -346,11 +349,14 @@ function PrintPageTF({ week }: PageProps) {
         <thead>
           <tr>
             <th className="print-label-col" style={{ width: '15%' }}></th>
-            {days.map((day, idx) => (
-              <th key={idx} style={{ width: '25%' }}>
-                {formatDayHeader(day)}
-              </th>
-            ))}
+            {days.map((day, idx) => {
+              const noSchool = day.dayNum === null || isNoSchoolEvent(day.holidayName) || hasNoSchoolNote(day.notes);
+              return (
+                <th key={idx} className={noSchool ? 'print-cell-day-off' : ''} style={{ width: '25%' }}>
+                  {formatDayHeader(day)}
+                </th>
+              );
+            })}
             <th className="print-todo-col-header" style={{ width: '35%' }}>To Do</th>
           </tr>
         </thead>

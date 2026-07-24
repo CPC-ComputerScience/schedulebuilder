@@ -188,8 +188,10 @@
   height: 110px;
 }
 
+.print-page-portrait .print-table th.print-cell-day-off,
+.print-page-portrait .print-table td.print-cell-day-off,
 .print-cell-day-off {
-  background: #d8d8d8 !important;
+  background: #f0f0f0 !important;
 }
 
 /* Event text on greyed-out day-off cells still readable */
