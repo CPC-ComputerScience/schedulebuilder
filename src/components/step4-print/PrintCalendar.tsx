@@ -37,21 +37,7 @@ function hasNoSchoolNote(notes: string[]): boolean {
 function getAvailableAcademicYears(
   icalData: { rotationDays: { date: string }[]; holidays: { date: string }[] },
 ): number[] {
-  const years = new Set<number>();
-  const allDates = [
-    ...icalData.rotationDays.map(r => r.date),
-    ...icalData.holidays.map(h => h.date),
-  ];
-  for (const d of allDates) {
-    const parsed = parseLocalDate(d);
-    const y = parsed.getFullYear();
-    const m = parsed.getMonth();
-    // Aug–Dec → academic year starts that calendar year
-    // Jan–Jun → academic year started the previous calendar year
-    const academicYear = m >= 6 ? y : y - 1;
-    years.add(academicYear);
-  }
-  return Array.from(years).sort((a, b) => a - b);
+  return [2026];
 }
 
 function useCalendarWeeks(printFullYear: boolean, academicStartYear: number): CalendarWeek[] {
