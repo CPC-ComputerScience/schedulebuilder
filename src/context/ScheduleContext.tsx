@@ -41,7 +41,7 @@ const INITIAL_STATE: AppState = {
   schoolName: '',
   blocks: DEFAULT_BLOCKS,
   scheduleGrid: makeEmptyGrid(),
-  icalData: { rotationDays: [], holidays: [], notes: [] },
+  icalData: { rotationDays: [], holidays: [], notes: [], parserVersion: 1 },
   selectedMonth: now.getMonth(),
   selectedYear: now.getFullYear(),
   step: 1,
@@ -87,16 +87,25 @@ function reducer(state: AppState, action: AppAction): AppState {
 
 const STORAGE_KEY = 'cpc-schedule-builder-state';
 
+const CURRENT_PARSER_VERSION = 1;
+
 function loadState(): AppState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
       // Ensure icalData has all required fields (old data may lack 'notes')
-      const icalData = {
+      let icalData = {
         ...INITIAL_STATE.icalData,
         ...(parsed.icalData || {}),
       };
+      
+      // If the cached parser version is older than current, invalidate calendar data
+      // so it forces a re-fetch and re-parse with the updated useICalParser logic.
+      if (icalData.parserVersion !== CURRENT_PARSER_VERSION) {
+        icalData = { rotationDays: [], holidays: [], notes: [], parserVersion: CURRENT_PARSER_VERSION };
+      }
+      
       // Always use fresh date values — never restore stale selectedMonth/selectedYear
       return {
         ...INITIAL_STATE,

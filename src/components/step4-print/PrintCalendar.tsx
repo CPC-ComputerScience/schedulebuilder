@@ -60,12 +60,18 @@ function useCalendarWeeks(printFullYear: boolean, academicStartYear: number): Ca
 
   return useMemo(() => {
     const rotationMap = new Map(icalData.rotationDays.map(r => [r.date, r.dayNum]));
-    const holidayMap = new Map(icalData.holidays.map(h => [h.date, h.name]));
+    
+    const holidayMap = new Map<string, string[]>();
+    for (const h of icalData.holidays) {
+      const existing = holidayMap.get(h.date) || [];
+      if (!existing.includes(h.name)) existing.push(h.name);
+      holidayMap.set(h.date, existing);
+    }
 
     const notesMap = new Map<string, string[]>();
     for (const n of icalData.notes) {
       const existing = notesMap.get(n.date) || [];
-      existing.push(n.name);
+      if (!existing.includes(n.name)) existing.push(n.name);
       notesMap.set(n.date, existing);
     }
 
@@ -73,50 +79,37 @@ function useCalendarWeeks(printFullYear: boolean, academicStartYear: number): Ca
     let endDate: Date;
 
     if (printFullYear) {
-      // Find the earliest event in August of the selected academic start year
       let firstAugustDate: Date | null = null;
-
-      // Check holidays in August
       const augustHolidays = icalData.holidays.filter(h => {
         const d = parseLocalDate(h.date);
-        return d.getFullYear() === academicStartYear && d.getMonth() === 7; // August = index 7
+        return d.getFullYear() === academicStartYear && d.getMonth() === 7;
       });
-
-      // Check rotation days in August
       const augustRotations = icalData.rotationDays.filter(r => {
         const d = parseLocalDate(r.date);
         return d.getFullYear() === academicStartYear && d.getMonth() === 7;
       });
-
-      // Collect all August dates and find the earliest
       const allAugustDates: Date[] = [
         ...augustHolidays.map(h => parseLocalDate(h.date)),
         ...augustRotations.map(r => parseLocalDate(r.date)),
       ];
-
       if (allAugustDates.length > 0) {
         allAugustDates.sort((a, b) => a.getTime() - b.getTime());
         firstAugustDate = allAugustDates[0];
       } else {
-        // Default to August 24th of the selected academic start year
         firstAugustDate = new Date(academicStartYear, 7, 24);
       }
-
       startDate = firstAugustDate;
-      endDate = new Date(academicStartYear + 1, 5, 30); // June 30th of the next year
+      endDate = new Date(academicStartYear + 1, 5, 30);
     } else {
-      // Find all weeks that contain at least one day in the selected month
       startDate = new Date(selectedYear, selectedMonth, 1);
       endDate = new Date(selectedYear, selectedMonth + 1, 0);
     }
 
-    // Start from the Monday of the first week
     const startMonday = new Date(startDate);
     startMonday.setDate(startDate.getDate() - ((startDate.getDay() + 6) % 7));
 
-    // End at the Friday of the last week
     const endFriday = new Date(endDate);
-    const lastDayOfWeek = (endDate.getDay() + 6) % 7; // 0=Mon
+    const lastDayOfWeek = (endDate.getDay() + 6) % 7; 
     endFriday.setDate(endDate.getDate() + (4 - lastDayOfWeek));
 
     const weeks: CalendarWeek[] = [];
@@ -132,8 +125,11 @@ function useCalendarWeeks(printFullYear: boolean, academicStartYear: number): Ca
 
         const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
         const dayNum = rotationMap.get(dateStr) ?? null;
-        const holidayName = holidayMap.get(dateStr);
-        const isHoliday = !!holidayName;
+        
+        const holidayNames = holidayMap.get(dateStr) || [];
+        const isHoliday = holidayNames.length > 0;
+        const holidayName = holidayNames.length > 0 ? holidayNames.join(' / ') : undefined;
+        
         const dayNotes = notesMap.get(dateStr) || [];
 
         const day: CalendarDay = {

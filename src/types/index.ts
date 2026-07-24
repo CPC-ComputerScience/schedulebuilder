@@ -61,6 +61,7 @@ export interface ICalData {
   rotationDays: RotationDay[];
   holidays: HolidayEvent[];
   notes: HolidayEvent[];      // non-rotation events from cpc-days.ics
+  parserVersion?: number;
 }
 
 // ─── Calendar / Print ───────────────────────────────────────────────────────
