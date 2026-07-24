@@ -48,7 +48,11 @@ function extractEvents(icsText: string): RawEvent[] {
       current = {};
     } else if (line === 'END:VEVENT') {
       if (inEvent && current.summary && current.dtstart) {
-        events.push({ summary: current.summary, dtstart: current.dtstart });
+        events.push({ 
+          summary: current.summary, 
+          dtstart: current.dtstart, 
+          dtend: current.dtend 
+        });
       }
       inEvent = false;
     } else if (inEvent) {
