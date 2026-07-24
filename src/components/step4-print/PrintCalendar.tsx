@@ -34,9 +34,7 @@ function hasNoSchoolNote(notes: string[]): boolean {
 }
 
 /** Derive the list of academic years that have data in the ICS. */
-function getAvailableAcademicYears(
-  icalData: { rotationDays: { date: string }[]; holidays: { date: string }[] },
-): number[] {
+function getAvailableAcademicYears(): number[] {
   return [2026];
 }
 
@@ -448,8 +446,8 @@ export default function PrintCalendar() {
 
   // Derive available academic years from ICS data
   const availableYears = useMemo(
-    () => getAvailableAcademicYears(state.icalData),
-    [state.icalData],
+    () => getAvailableAcademicYears(),
+    [],
   );
 
   // Default to 2026
