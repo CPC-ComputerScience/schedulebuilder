@@ -9,8 +9,8 @@ const WEEKDAY_JS: Record<Weekday, number> = {
 };
 
 const MONTH_NAMES = [
-  'January','February','March','April','May','June',
-  'July','August','September','October','November','December',
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
 ];
 
 const MONTH_FULL_NAMES = MONTH_NAMES;
@@ -60,7 +60,7 @@ function useCalendarWeeks(printFullYear: boolean, academicStartYear: number): Ca
 
   return useMemo(() => {
     const rotationMap = new Map(icalData.rotationDays.map(r => [r.date, r.dayNum]));
-    
+
     const holidayMap = new Map<string, string[]>();
     for (const h of icalData.holidays) {
       const existing = holidayMap.get(h.date) || [];
@@ -109,7 +109,7 @@ function useCalendarWeeks(printFullYear: boolean, academicStartYear: number): Ca
     startMonday.setDate(startDate.getDate() - ((startDate.getDay() + 6) % 7));
 
     const endFriday = new Date(endDate);
-    const lastDayOfWeek = (endDate.getDay() + 6) % 7; 
+    const lastDayOfWeek = (endDate.getDay() + 6) % 7;
     endFriday.setDate(endDate.getDate() + (4 - lastDayOfWeek));
 
     const weeks: CalendarWeek[] = [];
@@ -125,11 +125,11 @@ function useCalendarWeeks(printFullYear: boolean, academicStartYear: number): Ca
 
         const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
         const dayNum = rotationMap.get(dateStr) ?? null;
-        
+
         const holidayNames = holidayMap.get(dateStr) || [];
         const isHoliday = holidayNames.length > 0;
         const holidayName = holidayNames.length > 0 ? holidayNames.join(' / ') : undefined;
-        
+
         const dayNotes = notesMap.get(dateStr) || [];
 
         const day: CalendarDay = {
@@ -139,7 +139,7 @@ function useCalendarWeeks(printFullYear: boolean, academicStartYear: number): Ca
           holidayName,
           isHoliday,
           notes: dayNotes,
-          schedule: dayNum ? scheduleGrid[dayNum as 1|2|3|4] : null,
+          schedule: dayNum ? scheduleGrid[dayNum as 1 | 2 | 3 | 4] : null,
         };
         (week as any)[wd] = day;
       }
