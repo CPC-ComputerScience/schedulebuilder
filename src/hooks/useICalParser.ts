@@ -76,10 +76,9 @@ function extractEvents(icsText: string): RawEvent[] {
 function expandEventDates(event: RawEvent): string[] {
   const startStr = parseIcsDate(event.dtstart);
   if (!startStr) return [];
-  if (!event.dtend) return [startStr];
   
-  const endStr = parseIcsDate(event.dtend);
-  if (!endStr || startStr === endStr) return [startStr];
+  let endStr = event.dtend ? parseIcsDate(event.dtend) : startStr;
+  if (!endStr) endStr = startStr;
 
   const [sy, sm, sd] = startStr.split('-').map(Number);
   const start = new Date(sy, sm - 1, sd);
