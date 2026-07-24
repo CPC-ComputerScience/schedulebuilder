@@ -41,7 +41,7 @@ const INITIAL_STATE: AppState = {
   schoolName: '',
   blocks: DEFAULT_BLOCKS,
   scheduleGrid: makeEmptyGrid(),
-  icalData: { rotationDays: [], holidays: [], notes: [], parserVersion: 1 },
+  icalData: { rotationDays: [], holidays: [], notes: [], parserVersion: 2 },
   selectedMonth: now.getMonth(),
   selectedYear: now.getFullYear(),
   step: 1,
@@ -87,7 +87,7 @@ function reducer(state: AppState, action: AppAction): AppState {
 
 const STORAGE_KEY = 'cpc-schedule-builder-state';
 
-const CURRENT_PARSER_VERSION = 1;
+const CURRENT_PARSER_VERSION = 2;
 
 function loadState(): AppState {
   try {
@@ -136,6 +136,16 @@ export function ScheduleProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
     } catch {}
   }, [state]);
+
+  // Force cache bust on HMR or mount if version is old
+  useEffect(() => {
+    if (state.icalData.parserVersion !== CURRENT_PARSER_VERSION) {
+      dispatch({
+        type: 'SET_ICAL_DATA',
+        payload: { rotationDays: [], holidays: [], notes: [], parserVersion: CURRENT_PARSER_VERSION }
+      });
+    }
+  }, [state.icalData.parserVersion]);
 
   return (
     <ScheduleContext.Provider value={{ state, dispatch }}>
