@@ -10,43 +10,44 @@ import './App.css';
 
 function AppInner() {
   const { state, dispatch } = useSchedule();
-  const { step, icalData } = state;
+  const { step } = state;
   const [loadingCalendars, setLoadingCalendars] = useState(false);
   const [calendarError, setCalendarError] = useState<string | null>(null);
 
   useEffect(() => {
-    // If calendars are not yet loaded in context, or notes are missing, fetch them
-    if (icalData.rotationDays.length === 0 && icalData.holidays.length === 0 || (icalData.notes || []).length === 0) {
-      setLoadingCalendars(true);
-      Promise.all([
-        fetch(`${import.meta.env.BASE_URL}cpc-days.ics`).then(res => {
-          if (!res.ok) throw new Error("Failed to fetch cpc-days");
-          return res.text();
-        }),
-        fetch(`${import.meta.env.BASE_URL}cpc-teacher-days.ics`).then(res => {
-          if (!res.ok) throw new Error('Could not download cpc teacher days.ics');
-          return res.text();
-        })
-      ])
-        .then(([rotationText, holidaysText]) => {
-          const rotationDays = parseRotationIcs(rotationText);
-          const holidays = parseHolidaysIcs(holidaysText);
-          const notes = parseNotesIcs(rotationText);
-          dispatch({
-            type: 'SET_ICAL_DATA',
-            payload: { rotationDays, holidays, notes }
-          });
-          setCalendarError(null);
-        })
-        .catch(err => {
-          console.error('Error auto-loading calendar files:', err);
-          setCalendarError(err.message || 'Failed to load school calendars from Firebase.');
-        })
-        .finally(() => {
-          setLoadingCalendars(false);
+    // Always fetch fresh calendar data from the server on mount.
+    // Local cache (localStorage) is used for the initial render only;
+    // the server is the source of truth.
+    setLoadingCalendars(true);
+    Promise.all([
+      fetch(`${import.meta.env.BASE_URL}cpc-days.ics`).then(res => {
+        if (!res.ok) throw new Error("Failed to fetch cpc-days");
+        return res.text();
+      }),
+      fetch(`${import.meta.env.BASE_URL}cpc-teacher-days.ics`).then(res => {
+        if (!res.ok) throw new Error('Could not download cpc teacher days.ics');
+        return res.text();
+      })
+    ])
+      .then(([rotationText, holidaysText]) => {
+        const rotationDays = parseRotationIcs(rotationText);
+        const holidays = parseHolidaysIcs(holidaysText);
+        const notes = parseNotesIcs(rotationText);
+        dispatch({
+          type: 'SET_ICAL_DATA',
+          payload: { rotationDays, holidays, notes }
         });
-    }
-  }, [icalData, dispatch]);
+        setCalendarError(null);
+      })
+      .catch(err => {
+        console.error('Error auto-loading calendar files:', err);
+        setCalendarError(err.message || 'Failed to load school calendars from Firebase.');
+      })
+      .finally(() => {
+        setLoadingCalendars(false);
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const goTo = (s: 1 | 2 | 3 | 4) => dispatch({ type: 'SET_STEP', payload: s });
 
