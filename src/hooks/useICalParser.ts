@@ -164,9 +164,49 @@ export function parseRotationIcs(icsText: string): RotationDay[] {
   return result.sort((a, b) => a.date.localeCompare(b.date));
 }
 
+// --- OVERRIDES (Temporary patch) ---
+function applyOverrides(events: HolidayEvent[]): HolidayEvent[] {
+  const result: HolidayEvent[] = [];
+  for (const event of events) {
+    let { date, name } = event;
+    const nameLower = name.toLowerCase();
+
+    if ((date === '2026-09-04' || date === '2026-09-21') && nameLower.includes('staff meeting')) continue;
+    if (date === '2026-09-25') continue;
+    if (date === '2026-10-14' && (nameLower.includes('dept') || nameLower.includes('department'))) {
+      date = '2026-10-13';
+    }
+    if (date === '2026-10-16' && nameLower.includes('academic award')) continue;
+    if (date === '2026-12-17' && (nameLower.includes('no school') || nameLower.includes('winter break') || nameLower.includes('march break') || nameLower.includes('break'))) {
+      continue;
+    }
+    if (date === '2027-01-15' && nameLower.includes('parent info')) {
+      date = '2027-01-14';
+    }
+    if (date === '2027-04-21' && nameLower.includes('drama')) continue;
+    if (date === '2027-05-14' && (nameLower.includes('festival') || nameLower.includes('arts'))) continue;
+    if (['2027-05-24', '2027-05-25', '2027-05-26', '2027-05-27'].includes(date) && (nameLower.includes('gr 12') || nameLower.includes('grade 12'))) continue;
+    if (date === '2027-05-28' && nameLower.includes('athletic banquet')) continue;
+
+    result.push({ date, name });
+  }
+  return result;
+}
+
+function addCustomEvents(events: HolidayEvent[]): HolidayEvent[] {
+  const custom = [
+    { date: '2026-12-11', name: 'Staff Holiday Party' },
+    { date: '2027-01-29', name: 'Semi Formal for Gr 9-12' },
+    { date: '2027-05-11', name: 'Exams due to Heads' },
+    { date: '2027-05-20', name: 'Exams due to Admin' },
+  ];
+  return [...events, ...custom];
+}
+// -----------------------------------
+
 export function parseHolidaysIcs(icsText: string): HolidayEvent[] {
   const events = extractEvents(icsText);
-  const result: HolidayEvent[] = [];
+  let result: HolidayEvent[] = [];
 
   for (const event of events) {
     if (event.summary) {
@@ -177,13 +217,14 @@ export function parseHolidaysIcs(icsText: string): HolidayEvent[] {
     }
   }
 
+  result = applyOverrides(result);
   return result.sort((a, b) => a.date.localeCompare(b.date));
 }
 
 /** Extract non-rotation events from cpc-days.ics (everything that isn't "1","2","3","4"). */
 export function parseNotesIcs(icsText: string): HolidayEvent[] {
   const events = extractEvents(icsText);
-  const result: HolidayEvent[] = [];
+  let result: HolidayEvent[] = [];
   const rotationDays = new Set(['1', '2', '3', '4']);
 
   for (const event of events) {
@@ -196,5 +237,7 @@ export function parseNotesIcs(icsText: string): HolidayEvent[] {
     }
   }
 
+  result = applyOverrides(result);
+  result = addCustomEvents(result);
   return result.sort((a, b) => a.date.localeCompare(b.date));
 }

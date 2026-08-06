@@ -87,7 +87,7 @@ function reducer(state: AppState, action: AppAction): AppState {
 
 const STORAGE_KEY = 'cpc-schedule-builder-state';
 
-const CURRENT_PARSER_VERSION = 2;
+const CURRENT_PARSER_VERSION = 3;
 
 function loadState(): AppState {
   try {
