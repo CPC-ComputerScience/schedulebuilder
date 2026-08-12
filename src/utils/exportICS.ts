@@ -35,6 +35,9 @@ export function generateICS(state: AppState): string {
   const { icalData, scheduleGrid } = state;
   const rotationMap = new Map(icalData.rotationDays.map(r => [r.date, r.dayNum]));
   
+  const now = new Date();
+  const dtstamp = now.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+  
   // We also want to skip holidays that are "no school"
   const noSchoolDates = new Set<string>();
   for (const h of icalData.holidays) {
@@ -84,6 +87,7 @@ export function generateICS(state: AppState): string {
       icsContent.push(
         'BEGIN:VEVENT',
         `UID:${uid}`,
+        `DTSTAMP:${dtstamp}`,
         `DTSTART:${startDT}`,
         `DTEND:${endDT}`,
         `SUMMARY:${summary}`,
@@ -95,7 +99,7 @@ export function generateICS(state: AppState): string {
   icsContent.push('END:VCALENDAR');
   
   // Return CRLF string
-  return icsContent.join('\\r\\n');
+  return icsContent.join('\r\n');
 }
 
 export function downloadICS(state: AppState) {
