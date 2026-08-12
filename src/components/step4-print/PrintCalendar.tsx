@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useSchedule } from '../../context/ScheduleContext';
 import type { CalendarDay, CalendarWeek, Period, Weekday } from '../../types';
 import { WEEKDAYS, WEEKDAY_LABELS } from '../../types';
+import { downloadICS } from '../../utils/exportICS';
 import './PrintCalendar.css';
 
 const WEEKDAY_JS: Record<Weekday, number> = {
@@ -517,6 +518,16 @@ export default function PrintCalendar() {
               <span className="current-month">{MONTH_NAMES[selectedMonth]} {selectedYear}</span>
               <button className="btn btn-ghost btn-sm" onClick={() => changeMonth(1)}>Next ›</button>
             </div>
+          )}
+
+          {state.teacherName === 'Mr Hernandez' && (
+            <button
+              className="btn btn-primary"
+              onClick={() => downloadICS(state)}
+              style={{ marginRight: '8px' }}
+            >
+              📅 Export ICS
+            </button>
           )}
 
           <button
