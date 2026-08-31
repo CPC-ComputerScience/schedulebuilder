@@ -122,7 +122,7 @@
   background: var(--color-yellow-bg);
   border: 1px solid var(--color-yellow-border);
 }
-.grid-cell.duty .cell-content { color: #000; font-weight: 700; }
+.grid-cell.duty .cell-content { color: #fff; font-weight: 700; }
 
 .grid-cell.empty .cell-content { color: var(--color-text-faint); }
 .grid-cell.filled .cell-content { color: var(--color-text); font-weight: 600; font-size: 0.875rem; }

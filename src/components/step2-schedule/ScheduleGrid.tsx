@@ -160,11 +160,11 @@ export default function ScheduleGrid() {
                             title="Click to edit"
                             style={{
                               ...(activeColor && !cell.isDuty && !cell.isLunch ? { backgroundColor: activeColor + '33' } : {}),
-                              color: activeTextColor || '#000000',
+                              color: activeTextColor || '#FFFFFF',
                               ...(activeColor && !cell.isDuty && !cell.isLunch ? { fontWeight: 'bold' } : {})
                             }}
                           >
-                            <span className="cell-content" style={{ color: activeTextColor || '#000000' }}>
+                            <span className="cell-content" style={{ color: activeTextColor || '#FFFFFF' }}>
                               {cell.isEmpty ? <span className="cell-placeholder">—</span> : cell.content}
                             </span>
                             <div className="cell-actions">
