@@ -3,6 +3,7 @@ import { useSchedule } from '../../context/ScheduleContext';
 import type { CalendarDay, CalendarWeek, Period, Weekday } from '../../types';
 import { WEEKDAYS, WEEKDAY_LABELS } from '../../types';
 import { downloadICS } from '../../utils/exportICS';
+import { downloadExcel } from '../../utils/exportExcel';
 import './PrintCalendar.css';
 
 const WEEKDAY_JS: Record<Weekday, number> = {
@@ -224,7 +225,8 @@ function PrintPageMTW({ week }: PageProps) {
               const noSchool = day.dayNum === null || isNoSchoolEvent(day.holidayName) || hasNoSchoolNote(day.notes);
               return (
                 <th key={idx} className={noSchool ? 'print-cell-day-off' : ''} style={{ width: '28.33%' }}>
-                  {formatDayHeader(day)}
+                  <div>{formatDayHeader(day)}</div>
+                  {day.dayNum !== null && <div style={{ fontWeight: 'normal', fontSize: '11px', marginTop: '2px' }}>(Day {day.dayNum})</div>}
                 </th>
               );
             })}
@@ -338,7 +340,8 @@ function PrintPageTF({ week }: PageProps) {
               const noSchool = day.dayNum === null || isNoSchoolEvent(day.holidayName) || hasNoSchoolNote(day.notes);
               return (
                 <th key={idx} className={noSchool ? 'print-cell-day-off' : ''} style={{ width: '25%' }}>
-                  {formatDayHeader(day)}
+                  <div>{formatDayHeader(day)}</div>
+                  {day.dayNum !== null && <div style={{ fontWeight: 'normal', fontSize: '11px', marginTop: '2px' }}>(Day {day.dayNum})</div>}
                 </th>
               );
             })}
@@ -440,6 +443,15 @@ function PrintPageTF({ week }: PageProps) {
   );
 }
 
+// ─── Cover Page: Schedules A, B, C, D ────────────────────────────────────────
+function PrintCoverPage() {
+  return (
+    <div className="print-page print-cover-page" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <img src="/schedulebuilder/schedule.png" alt="Schedule Cover" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+    </div>
+  );
+}
+
 // ─── Main Print Calendar component ───────────────────────────────────────────
 export default function PrintCalendar() {
   const { state, dispatch } = useSchedule();
@@ -532,6 +544,14 @@ export default function PrintCalendar() {
 
           <button
             className="btn btn-primary"
+            onClick={() => downloadExcel(state)}
+            style={{ marginRight: '8px' }}
+          >
+            📊 Export to Excel
+          </button>
+
+          <button
+            className="btn btn-primary"
             onClick={() => window.print()}
           >
             🖨️ Print
@@ -551,6 +571,8 @@ export default function PrintCalendar() {
 
       {/* Print preview wrapper */}
       <div className="print-preview-wrapper print-calendar">
+        {hasData && <PrintCoverPage />}
+
         {weeks.map((week) => (
           <React.Fragment key={week.weekNumber}>
             <PrintPageMTW week={week} />

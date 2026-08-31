@@ -65,7 +65,7 @@
   /* aspect-ratio to match US Letter */
   min-height: 1020px;
   padding: 40px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   border: 1px solid #ddd;
   border-radius: 4px;
   box-sizing: border-box;
