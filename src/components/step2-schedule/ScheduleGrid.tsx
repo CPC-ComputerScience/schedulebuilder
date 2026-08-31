@@ -17,6 +17,7 @@ export default function ScheduleGrid() {
   const [editValue, setEditValue] = useState('');
 
   const grid = state.scheduleGrid;
+  const canCustomizeTextColor = state.teacherName.trim().toLowerCase() === 'smarty pants';
 
   const handleResetGrid = () => {
     if (confirm('Reset the schedule grid from your block assignments? Any custom changes will be lost.')) {
@@ -127,6 +128,14 @@ export default function ScheduleGrid() {
                     const cell = grid[dayNum][period];
                     const isEditingThis = editing?.dayNum === dayNum && editing?.period === period;
 
+                    const matchingBlock = cell.content && cell.content !== 'PREP'
+                      ? state.blocks.find(b => b.course === cell.content)
+                      : undefined;
+                    const activeColor = matchingBlock?.color || cell.color;
+                    const activeTextColor = canCustomizeTextColor
+                      ? matchingBlock?.textColor || cell.textColor
+                      : undefined;
+
                     return (
                       <td key={dayNum} className="grid-td">
                         {isEditingThis ? (
@@ -149,8 +158,13 @@ export default function ScheduleGrid() {
                             className={getCellClass(cell)}
                             onClick={() => startEdit(dayNum, period)}
                             title="Click to edit"
+                            style={{
+                              ...(activeColor && !cell.isDuty && !cell.isLunch ? { backgroundColor: activeColor + '33' } : {}),
+                              color: activeTextColor || '#000000',
+                              ...(activeColor && !cell.isDuty && !cell.isLunch ? { fontWeight: 'bold' } : {})
+                            }}
                           >
-                            <span className="cell-content">
+                            <span className="cell-content" style={{ color: activeTextColor || '#000000' }}>
                               {cell.isEmpty ? <span className="cell-placeholder">—</span> : cell.content}
                             </span>
                             <div className="cell-actions">

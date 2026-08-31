@@ -148,7 +148,8 @@ function formatDayHeader(day: CalendarDay): string {
 
 // ─── Cell renderer ──────────────────────────────────────────────────────────
 function PrintCell({ day, period }: { day: CalendarDay; period: Period }) {
-
+  const { state } = useSchedule();
+  const canCustomizeTextColor = state.teacherName.trim().toLowerCase() === 'smarty pants';
   // A day is "no school" if it has no dayNum OR if any holiday/note says "no school" / "winter break" / "march break"
   const noSchool = day.dayNum === null || isNoSchoolEvent(day.holidayName) || hasNoSchoolNote(day.notes);
 
@@ -169,8 +170,22 @@ function PrintCell({ day, period }: { day: CalendarDay; period: Period }) {
     cell.isLunch ? 'print-cell-lunch' : ''
   ].filter(Boolean).join(' ');
 
+  const matchingBlock = cell.content && cell.content !== 'PREP'
+    ? state.blocks.find(b => b.course === cell.content)
+    : undefined;
+  const activeColor = matchingBlock?.color || cell.color;
+  const activeTextColor = canCustomizeTextColor
+    ? matchingBlock?.textColor || cell.textColor
+    : undefined;
+
+  const customStyle: React.CSSProperties = {
+    ...(activeColor && !cell.isDuty && !cell.isLunch ? { backgroundColor: activeColor + '33' } : {}),
+    color: activeTextColor || '#000000',
+    ...(activeColor && !cell.isDuty && !cell.isLunch ? { fontWeight: 'bold' } : {})
+  };
+
   return (
-    <td className={cellClass}>
+    <td className={cellClass} style={customStyle}>
       <div className="print-cell-main-content">{cell.content}</div>
     </td>
   );

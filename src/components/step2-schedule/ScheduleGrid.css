@@ -122,12 +122,7 @@
   background: var(--color-yellow-bg);
   border: 1px solid var(--color-yellow-border);
 }
-.grid-cell.duty .cell-content { color: var(--color-yellow); font-weight: 700; }
-
-.grid-cell.lunch {
-  background: rgba(91,127,255,0.06);
-}
-.grid-cell.lunch .cell-content { color: var(--color-text-muted); font-style: italic; }
+.grid-cell.duty .cell-content { color: #000; font-weight: 700; }
 
 .grid-cell.empty .cell-content { color: var(--color-text-faint); }
 .grid-cell.filled .cell-content { color: var(--color-text); font-weight: 600; font-size: 0.875rem; }

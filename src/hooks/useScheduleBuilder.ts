@@ -11,8 +11,8 @@ function makeLunch(): ScheduleCell {
   return { content: 'LUNCH', isDuty: false, isLunch: true, isEmpty: false };
 }
 
-function makeClass(course: string): ScheduleCell {
-  return { content: course, isDuty: false, isLunch: false, isEmpty: false };
+function makeClass(course: string, color?: string, textColor?: string): ScheduleCell {
+  return { content: course, isDuty: false, isLunch: false, isEmpty: false, color, textColor };
 }
 
 function isLowerGrade(grade: string): boolean {
@@ -88,23 +88,25 @@ export function deriveGridFromBlocks(blocks: Block[]): ScheduleGrid {
           isDuty: false,
           isLunch: false,
           isEmpty: false,
+          color: block.color,
+          textColor: block.textColor,
         };
       } else if (period === 'P3-Early' || period === 'P3-Late') {
         // Apply P3 lunch logic
         if (isLowerGrade(block.grade)) {
           // Grade 7-8: students eat early (P3-Early), teacher class in P3-Late
           grid[dayNum]['P3-Early'] = makeLunch();
-          grid[dayNum]['P3-Late'] = makeClass(block.course);
+          grid[dayNum]['P3-Late'] = makeClass(block.course, block.color, block.textColor);
         } else if (isUpperGrade(block.grade)) {
           // Grade 9-12: teacher class in P3-Early, teacher lunch in P3-Late
-          grid[dayNum]['P3-Early'] = makeClass(block.course);
+          grid[dayNum]['P3-Early'] = makeClass(block.course, block.color, block.textColor);
           grid[dayNum]['P3-Late'] = makeLunch();
         } else {
           // Unknown grade — just place where specified
-          grid[dayNum][period] = makeClass(block.course);
+          grid[dayNum][period] = makeClass(block.course, block.color, block.textColor);
         }
       } else {
-        grid[dayNum][period] = makeClass(block.course);
+        grid[dayNum][period] = makeClass(block.course, block.color, block.textColor);
       }
     }
   }

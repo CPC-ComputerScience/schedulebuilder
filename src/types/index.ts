@@ -7,6 +7,8 @@ export interface Block {
   course: string;
   grade: string; // e.g. "7", "9", "" for prep
   isPrep: boolean;
+  color?: string;
+  textColor?: string;
 }
 
 // ─── Schedule Grid ──────────────────────────────────────────────────────────
@@ -40,6 +42,8 @@ export interface ScheduleCell {
   isDuty: boolean;   // yellow highlight
   isLunch: boolean;
   isEmpty: boolean;
+  color?: string;
+  textColor?: string;
 }
 
 // [dayNum 1-4][period] = cell
